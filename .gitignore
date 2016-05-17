@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Python Compiled Files and eclipse PyDev Files
+.project
+.pydevproject
+*.pyc

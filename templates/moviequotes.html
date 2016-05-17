@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MovieQuotes</title>
+<link rel="stylesheet" type="text/css"
+	href="/static/stylesheets/moviequotes.css" />
+<!-- Bootstrap -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">MovieQuotes</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="#" id="add-quote" data-toggle="modal"
+						data-target="#insert-quote-modal">Add Quote</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#" id="toggle-edit">Edit</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="table-wrapper">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Quote</th>
+						<th>Movie</th>
+						<th class="hidden edit-actions">Edits</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for moviequote in moviequotes_query %} 
+						<tr>
+							<td>{{moviequote.quote}}</td>
+							<td>{{moviequote.movie}}</td>
+							<td class="hidden edit-actions">
+								<button type="button" data-toggle="modal" data-target="#insert-quote-modal" class="btn btn-xs btn-success glyphicon glyphicon-pencil edit-movie-quote">
+									<div class="hidden entity-key">{{ moviequote.key.urlsafe() }}</div>
+									<div class="hidden quote">{{ moviequote.quote}}</div>
+									<div class="hidden movie">{{ moviequote.movie }}</div>
+								</button>
+								<button type="button" data-toggle="modal" data-target="#delete-quote-modal" class="btn btn-xs btn-danger glyphicon glyphicon-remove delete-movie-quote">
+									<div class="hidden entity-key">{{ moviequote.key.urlsafe() }}</div>
+								</button>
+							</td>
+						</tr> 
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<!-- Insert Modal -->
+	<div class="modal fade" id="insert-quote-modal" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Insert a MovieQuote</h4>
+				</div>
+				<form action="/insertquote" method="POST" class="form-horizontal"
+					role="form">
+					<input type="text" name="entity_key" class="hidden"/>
+					<div class="modal-body">
+
+						<div class="form-group">
+							<label for="quote" class="col-sm-2 control-label">Quote</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="quote" name="quote"
+									placeholder="Quote">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="movie" class="col-sm-2 control-label">Movie</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="movie" name="movie"
+									placeholder="Movie title">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Add Quote</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Delete Modal -->
+	<div class="modal fade" id="delete-quote-modal" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Delete MovieQuote</h4>
+				</div>
+				<form action="/deletequote" method="POST" class="form-horizontal"
+					role="form">
+					<input type="text" name="entity_key" class="hidden"/>
+					<div class="modal-body">
+
+						<p>Are you sure you wish to delete this quote?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-danger">Delete Quote</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- Compiled and minified Bootstrap JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script
+		src="/static/js/moviequotes.js"></script>
+</body>
+</html>
